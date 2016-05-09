@@ -1,0 +1,26 @@
+version: '2'
+services:
+  web:
+    build: ./web
+    ports:
+      - "${BEAR_DOCKER_WEB_PORT}:8181"
+    volumes:
+      - ${BEAR_DOCKER_PROJECT_SRC}:/var/www/src
+      - ${BEAR_DOCKER_COMPOSER_CACHE}:/home/composer/cache
+    environment:
+      - COMPOSER_CACHE_DIR=/home/composer/cache
+    command: php -S 0.0.0.0:8181 /var/www/src/var/www/index.php
+    working_dir: /var/www/src
+    links:
+      - db
+  db:
+    image: mysql:5.6
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=bear_sunday
+      - MYSQL_USER=bear
+      - MYSQL_PASSWORD=koriym

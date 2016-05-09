@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+if [[ -z $BEAR_DOCKER_PROJECT_SRC ]] || [[ -z $BEAR_DOCKER_COMPOSER_CACHE ]]|| [[ -z $BEAR_DOCKER_WEB_PORT ]]; then
+    echo "missing environment variables. see README.md"
+    exit 1
+fi
+
+case "$(docker-machine status bear 2>&1)" in
+    "Stopped" )
+        docker-machine start bear
+    ;;
+    "Running" )
+        # do nothing
+        :
+    ;;
+    "Host does not exist"* )
+        docker-machine create --driver=virtualbox bear
+    ;;
+    * )
+        echo "unknow docker-machine state"
+        exit 1
+    ;;
+esac
+
+eval "$(docker-machine env bear)"
+
+pushd "$(cd $(dirname $0)/../;pwd)" > /dev/null
+mkdir -p "$BEAR_DOCKER_COMPOSER_CACHE"
+docker-compose --project-name=beardocker up -d 2>/dev/null
+popd > /dev/null
+
+docker \
+    exec \
+    -it \
+    beardocker_web_1 \
+    "$@"
