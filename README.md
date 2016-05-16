@@ -26,7 +26,7 @@ disclaimer: I don't know this works in Windows.
 * Add `bin` dir to `$PATH` environment variable  
 * Use services
   * Before using... keep in mind followings.
-    * Any of annoying docker procedures are hided in  `bear_docker_run` command.
+    * Any of annoying docker procedures are hidden in  `bear_docker_run` command.
     * The very first `bear_docker_run` will take time to execute with building docker images etc
   * Shell commands
     * Just prepend `bear_docker_run` to the command you want to execute.
